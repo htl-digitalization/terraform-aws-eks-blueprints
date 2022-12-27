@@ -24,9 +24,9 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name   = basename(path.cwd)
-  region = "us-west-2"
+  region = "ap-southeast-1"
 
-  vpc_cidr = "10.0.0.0/16"
+  vpc_cidr = "150.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
@@ -123,20 +123,20 @@ module "eks_blueprints_kubernetes_addons" {
   enable_amazon_eks_kube_proxy         = true
   enable_amazon_eks_aws_ebs_csi_driver = true
 
-  enable_prometheus                    = true
-  enable_amazon_prometheus             = true
-  amazon_prometheus_workspace_endpoint = module.managed_prometheus.workspace_prometheus_endpoint
+  # enable_prometheus                    = true
+  # enable_amazon_prometheus             = true
+  # amazon_prometheus_workspace_endpoint = module.managed_prometheus.workspace_prometheus_endpoint
 
-  enable_aws_for_fluentbit                 = true
-  aws_for_fluentbit_create_cw_log_group    = false
-  aws_for_fluentbit_cw_log_group_retention = 30
-  aws_for_fluentbit_helm_config = {
-    create_namespace = true
-  }
+  # enable_aws_for_fluentbit                 = true
+  # aws_for_fluentbit_create_cw_log_group    = false
+  # aws_for_fluentbit_cw_log_group_retention = 30
+  # aws_for_fluentbit_helm_config = {
+  #   create_namespace = true
+  # }
 
-  enable_kyverno                 = true
-  enable_kyverno_policies        = true
-  enable_kyverno_policy_reporter = true
+  # enable_kyverno                 = true
+  # enable_kyverno_policies        = true
+  # enable_kyverno_policy_reporter = true
 
   tags = local.tags
 }
