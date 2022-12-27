@@ -33,13 +33,13 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name   = basename(path.cwd)
-  region = "us-west-2"
+  region = "ap-southeast-1"
 
   cluster_version = "1.24"
 
   azs                = slice(data.aws_availability_zones.available.names, 0, 3)
-  vpc_cidr           = "10.0.0.0/16"
-  secondary_vpc_cidr = "10.99.0.0/16"
+  vpc_cidr           = "100.0.0.0/16"
+  secondary_vpc_cidr = "100.99.0.0/16"
 
   tags = {
     Blueprint  = local.name
@@ -71,10 +71,10 @@ module "eks_blueprints" {
 
       min_size     = 1
       max_size     = 3
-      desired_size = 2
+      desired_size = 1
 
       custom_ami_id  = data.aws_ssm_parameter.eks_optimized_ami.value
-      instance_types = ["m5.xlarge"]
+      instance_types = ["t3.large"]
 
       create_launch_template = true
       launch_template_os     = "amazonlinux2eks"
@@ -109,6 +109,7 @@ module "eks_blueprints_kubernetes_addons" {
   eks_cluster_version  = module.eks_blueprints.eks_cluster_version
 
   enable_amazon_eks_vpc_cni = true
+  enable_amazon_eks_aws_ebs_csi_driver = true
   amazon_eks_vpc_cni_config = {
     # Version 1.6.3-eksbuild.2 or later of the Amazon VPC CNI is required for custom networking
     # Version 1.9.0 or later (for version 1.20 or earlier clusters or 1.21 or later clusters configured for IPv4)
